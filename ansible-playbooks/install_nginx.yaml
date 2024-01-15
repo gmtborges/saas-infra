@@ -1,0 +1,14 @@
+# vim:ft=yaml.ansible
+---
+- name: "Install nginx on debian machine"
+  hosts: instagain
+  become: true
+  tasks:
+    - name: "Install nginx"
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+    - name: "Start nginx"
+      ansible.builtin.service:
+        name: nginx
+        state: started
