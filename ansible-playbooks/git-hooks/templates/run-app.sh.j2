@@ -1,0 +1,19 @@
+#!/bin/bash
+cd app
+
+export SECRET_KEY_BASE={{ secret_key_base }}
+export DATABASE_URL={{ database_url }}
+export ELIXIR_VERSION=1.15
+export ERLANG_VERSION=25
+
+# Initial setup
+mix deps.get --only prod
+MIX_ENV=prod mix compile
+
+# Compile assets
+MIX_ENV=prod mix assets.deploy
+
+# Custom tasks (like DB migrations)
+MIX_ENV=prod mix ecto.migrate
+
+MIX_ENV=prod elixir --erl '-detached' -S mix phx.server

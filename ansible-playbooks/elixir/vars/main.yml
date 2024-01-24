@@ -1,0 +1,3 @@
+---
+# vars file for elixir
+NODEJS_VERSION: "18"

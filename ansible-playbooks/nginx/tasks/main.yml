@@ -1,0 +1,25 @@
+# vim:ft=yaml.ansible
+---
+# tasks file for nginx
+- name: "Install nginx"
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: "Start nginx"
+  ansible.builtin.service:
+    name: nginx
+    state: started
+
+- name: "Add Phoenix config template to the Nginx available sites"
+  ansible.builtin.template:
+    src: templates/phoenix_server.conf.j2
+    dest: "/etc/nginx/sites-available/{{ server_name }}.conf"
+    mode: "0644"
+
+- name: "Enable Phoenix config template from Nginx available sites"
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/{{ server_name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ server_name }}.conf"
+    state: link
+  notify: "Restart nginx"
