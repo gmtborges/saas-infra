@@ -5,15 +5,10 @@ variable "ec2_instance_type" {
 
 variable "ec2_ami" {
   type    = string
-  default = "ami-04828c49731751662" # Debian 11 ARM
+  default = "ami-04828c49731751662" # Replace with the AMI ID for Debian 11 ARM in your region
 }
 
 variable "app" {
   type    = string
   default = "app"
-}
-
-variable "vpc_id" {
-  type    = string
-  default = "vpc-0a5e6c5e3e3e3e3e3"
 }
