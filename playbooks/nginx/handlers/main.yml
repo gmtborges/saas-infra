@@ -1,6 +1,11 @@
 # vim:ft=yaml.ansible
 ---
 # handlers file for nginx
+- name: "Reload nginx"
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
+
 - name: "Restart nginx"
   ansible.builtin.service:
     name: nginx

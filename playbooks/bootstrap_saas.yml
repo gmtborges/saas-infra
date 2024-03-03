@@ -1,20 +1,11 @@
 # vim:ft=yaml.ansible
 ---
-- name: Install Elixir, Postgres, and Nginx as reverse-proxy in a debian machine
+- name: Install Nginx with certs as reverse-proxy in a debian machine
   hosts: saas
   become: true
   vars:
-    server_name: instagain.club
-    wildcard_name: www.instagain.club
-    git_work_tree: /home/gcloud/app
-    git_bare_dir: /home/gcloud/instagain.git
-    home: /home/gcloud
-    user: gcloud
-  vars_files:
-    - secrets.yml
+    domain_name: example.com
+    email: webmaster@example.com
 
   roles:
-    - elixir
-    - postgresql
     - nginx
-    - git-hooks

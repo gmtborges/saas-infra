@@ -1,25 +1,50 @@
 # vim:ft=yaml.ansible
 ---
 # tasks file for nginx
-- name: "Install nginx"
+- name: "Install Nginx"
   ansible.builtin.apt:
     name: nginx
     state: present
+    update_cache: true
 
-- name: "Start nginx"
-  ansible.builtin.service:
-    name: nginx
-    state: started
+- name: "Install Certbot"
+  ansible.builtin.apt:
+    name:
+      - python3-certbot-nginx
+      - software-properties-common
+    state: present
+    update_cache: true
 
-- name: "Add app config template to the Nginx available sites"
+- name: Check if certificate already exists
+  ansible.builtin.stat:
+    path: "/etc/letsencrypt/live/{{ domain_name }}/cert.pem"
+  register: letsencrypt_cert
+
+- name: "Obtain SSL certificate"
+  ansible.builtin.shell: >
+    certbot certonly --nginx --non-interactive --agree-tos --email '{{ email }}'
+    -d '{{ domain_name }}' -d 'www.{{ domain_name }}'
+  changed_when: letsencrypt_cert.stat.exists
+
+# - name: "Start nginx"
+#   ansible.builtin.service:
+#     name: nginx
+#     state: started
+#
+- name: "Add reverse-proxy Nginx configuration file"
   ansible.builtin.template:
-    src: templates/app_server.conf.j2
+    src: templates/nginx.conf.j2
     dest: "/etc/nginx/sites-available/{{ domain_name }}.conf"
     mode: "0644"
 
-- name: "Enable app config template from Nginx available sites"
+- name: Remove default NGINX configuration
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: "Enable reverse-proxy Nginx available sites"
   ansible.builtin.file:
     src: "/etc/nginx/sites-available/{{ domain_name }}.conf"
     dest: "/etc/nginx/sites-enabled/{{ domain_name }}.conf"
     state: link
-  notify: "Restart nginx"
+  notify: "Reload nginx"
