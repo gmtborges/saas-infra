@@ -1,0 +1,25 @@
+---
+# tasks file for git-hooks
+- name: "Add post-receive hook"
+  ansible.builtin.template:
+    src: templates/post-receive.j2
+    dest: "{{ git_bare_dir }}/hooks/post-receive"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0755"
+
+- name: "Add run script"
+  ansible.builtin.file:
+    src: files/run-app.sh
+    dest: "{{ home }}/run-app.sh"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0755"
+
+- name: "Add stop script"
+  ansible.builtin.file:
+    src: files/stop-app.sh
+    dest: "{{ home }}/stop-app.sh"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0755"
