@@ -1,0 +1,21 @@
+# vim:ft=conf
+server {
+    listen 80;
+    server_name {{ domain_name }}; # Change this to your domain
+
+    location / {
+        proxy_pass http://localhost:3000; # The node app
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Serve static files directly from Nginx for better performance
+    location /static {
+        alias /usr/local/app/build/static; # Update this path
+        expires 30d;
+        access_log off;
+    }
+}
