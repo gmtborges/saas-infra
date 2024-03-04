@@ -24,7 +24,7 @@
   ansible.builtin.shell: >
     certbot certonly --nginx --non-interactive --agree-tos --email '{{ email }}'
     -d '{{ domain_name }}' -d 'www.{{ domain_name }}'
-  changed_when: letsencrypt_cert.stat.exists
+  changed_when: not letsencrypt_cert.stat.exists
 
 # - name: "Start nginx"
 #   ansible.builtin.service:

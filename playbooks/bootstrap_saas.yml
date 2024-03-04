@@ -1,11 +1,21 @@
 # vim:ft=yaml.ansible
 ---
-- name: Install Nginx with certs as reverse-proxy in a debian machine
+- name:
+    Install Nginx with certs as reverse-proxy, and set up a nodejs app running
+    in docker, using a debian 11.
   hosts: saas
   become: true
   vars:
     domain_name: example.com
     email: webmaster@example.com
+    home: /home/admin
+    git_bare_dir: "{{ home }}/app.git"
+    git_work_tree: "{{ home }}/app"
+  vars_files:
+    - secrets.yml
 
   roles:
     - nginx
+    - git
+    - docker
+    - app-scripts

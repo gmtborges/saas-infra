@@ -1,0 +1,29 @@
+# vim:ft=yaml.ansible
+---
+# tasks file for git
+- name: "Create git bare directory"
+  ansible.builtin.file:
+    path: "{{ git_bare_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: "Install git"
+  ansible.builtin.apt:
+    name: git
+    state: present
+
+- name: "Initialize git bare repository"
+  ansible.builtin.command:
+    cmd: "git init --bare" # noqa command-instead-of-module
+    chdir: "{{ git_bare_dir }}"
+    creates: "{{ git_bare_dir }}/HEAD"
+
+- name: "Add post-receive hook"
+  ansible.builtin.template:
+    src: templates/post-receive.j2
+    dest: "{{ git_bare_dir }}/hooks/post-receive"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
