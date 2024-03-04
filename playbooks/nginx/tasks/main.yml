@@ -26,11 +26,6 @@
     -d '{{ domain_name }}' -d 'www.{{ domain_name }}'
   changed_when: not letsencrypt_cert.stat.exists
 
-# - name: "Start nginx"
-#   ansible.builtin.service:
-#     name: nginx
-#     state: started
-#
 - name: "Add reverse-proxy Nginx configuration file"
   ansible.builtin.template:
     src: templates/nginx.conf.j2
