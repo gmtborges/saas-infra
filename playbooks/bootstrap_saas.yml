@@ -7,12 +7,10 @@
   become: true
   vars:
     domain_name: example.com
-    email: webmaster@example.com
-    home: /home/admin
+    email: webmaster@example.com # for letsencrypt
+    home: /home/admin # Default for debian 11
     git_bare_dir: "{{ home }}/app.git"
     git_work_tree: "{{ home }}/app"
-  vars_files:
-    - secrets.yml
 
   roles:
     - nginx

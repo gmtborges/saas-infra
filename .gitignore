@@ -1,6 +1,7 @@
 # Ansible
 .vault_pass
 hosts.ini
+.env
 
 # Local .terraform directories
 .terraform/
