@@ -5,8 +5,12 @@
   ansible.builtin.file:
     path: "{{ git_bare_dir }}"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: "Create work tree directory"
+  ansible.builtin.file:
+    path: "{{ git_work_tree }}"
+    state: directory
     mode: "0755"
 
 - name: "Install git"
@@ -24,6 +28,4 @@
   ansible.builtin.template:
     src: templates/post-receive.j2
     dest: "{{ git_bare_dir }}/hooks/post-receive"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
     mode: "0755"

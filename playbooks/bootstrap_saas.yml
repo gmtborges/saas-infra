@@ -16,6 +16,6 @@
 
   roles:
     - nginx
-    - git
+    - { role: git, become_user: admin }
     - docker
-    - app-scripts
+    - { role: app-scripts, become_user: admin }

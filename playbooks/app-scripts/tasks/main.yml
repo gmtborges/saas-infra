@@ -5,22 +5,16 @@
   ansible.builtin.copy:
     src: files/run-app.sh
     dest: "{{ home }}/run-app.sh"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
     mode: "0755"
 
 - name: "Copy stop script"
   ansible.builtin.copy:
     src: files/stop-app.sh
     dest: "{{ home }}/stop-app.sh"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
     mode: "0755"
 
 - name: "Copy environment file"
   ansible.builtin.template:
     src: templates/.env.j2
     dest: "{{ home }}/.env"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
     mode: "0644"
