@@ -7,14 +7,8 @@
     dest: "{{ home }}/run-app.sh"
     mode: "0755"
 
-- name: "Copy stop script"
-  ansible.builtin.copy:
-    src: files/stop-app.sh
-    dest: "{{ home }}/stop-app.sh"
-    mode: "0755"
-
 - name: "Copy environment file"
   ansible.builtin.copy:
-    src: file/.env
+    src: files/.env
     dest: "{{ home }}/.env"
     mode: "0644"
