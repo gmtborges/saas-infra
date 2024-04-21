@@ -1,19 +1,10 @@
 # vim:ft=yaml.ansible
 ---
 - name:
-    Install Nginx with certs as reverse-proxy, and set up a nodejs app running
-    in docker, using a debian 11.
+    Install Caddy as reverse-proxy, and a go application in a debian 11 server.
   hosts: saas
   become: true
-  vars:
-    domain_name: example.com
-    email: webmaster@example.com # for letsencrypt
-    home: /home/admin # Default for debian 11
-    git_bare_dir: "{{ home }}/app.git"
-    git_work_tree: "{{ home }}/app"
 
   roles:
-    - nginx
-    - { role: git, become_user: admin }
-    - docker
-    - { role: app-scripts, become_user: admin }
+    - caddy
+    - go-app

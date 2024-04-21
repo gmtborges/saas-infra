@@ -1,0 +1,65 @@
+# vim:ft=yaml.ansible
+---
+- name: Install required packages
+  apt:
+    name:
+      - debian-keyring
+      - debian-archive-keyring
+      - apt-transport-https
+      - curl
+    state: present
+    update_cache: yes
+
+- name: Download Caddy GPG key
+  ansible.builtin.get_url:
+    url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+    dest: /tmp/caddy.gpg.key
+    mode: "0644"
+
+- name: Dearmor Caddy GPG key and add to keyring
+  ansible.builtin.shell: |
+    gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg /tmp/caddy.gpg.key
+  args:
+    creates: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+
+- name: Add Caddy repository
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/caddy-stable.list
+    content: |
+      # Source: Caddy
+      # Site: https://github.com/caddyserver/caddy
+      # Repository: Caddy / stable
+      # Description: Fast, multi-platform web server with automatic HTTPS
+
+      deb [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+
+      deb-src [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+    mode: "0644"
+    owner: root
+    group: root
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install Caddy
+  apt:
+    name: caddy
+    state: present
+
+- name: Configure Caddy as a reverse proxy
+  ansible.builtin.copy:
+    dest: /etc/caddy/Caddyfile
+    content: |
+      {
+        email you@example.com  # Replace with your email
+      }
+
+      orcamentoauto.com.br {
+        reverse_proxy localhost:3000
+      }
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - reload caddy

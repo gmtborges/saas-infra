@@ -1,0 +1,28 @@
+---
+# tasks file for go-app
+- name: Create systemd service file for Go application
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/goapp.service
+    content: |
+      [Unit]
+      Description=Go Application
+      After=network.target
+
+      [Service]
+      User=nobody
+      ExecStart=/usr/local/bin/myapp
+      Restart=always
+      Environment="PORT=3000"
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: "0644"
+  notify:
+    - reload systemd
+    - start go app
+
+- name: Enable and start Go application service
+  ansible.builtin.systemd:
+    name: goapp
+    enabled: yes
+    state: started

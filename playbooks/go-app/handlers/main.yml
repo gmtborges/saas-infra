@@ -1,0 +1,10 @@
+---
+# handlers file for go-app
+- name: reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: start go app
+  ansible.builtin.systemd:
+    name: goapp
+    state: restarted

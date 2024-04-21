@@ -1,0 +1,6 @@
+---
+# handlers file for caddy
+- name: reload caddy
+  ansible.builtin.systemd:
+    name: caddy
+    state: restarted
