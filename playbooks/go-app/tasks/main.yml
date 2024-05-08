@@ -7,22 +7,17 @@
       [Unit]
       Description=Go Application
       After=network.target
-
       [Service]
       User=nobody
-      ExecStart=/usr/local/bin/myapp
+      ExecStart=/usr/local/bin/app
       Restart=always
       Environment="PORT=3000"
-
       [Install]
       WantedBy=multi-user.target
-    mode: "0644"
-  notify:
-    - reload systemd
-    - start go app
-
+    mode: '0644'
+  notify: [reload systemd, start go app]
 - name: Enable and start Go application service
   ansible.builtin.systemd:
     name: goapp
-    enabled: yes
+    enabled: true
     state: started
